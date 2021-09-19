@@ -1,21 +1,28 @@
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.ListCellRenderer;
 import java.io.IOException;
 import java.util.Objects;
 
-public class HelpFrame extends JFrame{
+public class HelpFrame extends BingoGame{
     private Font TWBlack,TWBold,TWLight,TWBoldItalic,TWExtraLight,TWExtraLightItalic,TWItalic,TWLightItalic,TWRegular,TWSemiBold,TWSemiBoldItalic,JBExtraBold,DMItalic,DMRegular,DMRegular2,GSBold;
     private JButton fc;
     private JLabel l;
+    private JList<Object> list;
     private String folderDir;
 
     public HelpFrame(){
-        super("How to Use");
+
+        //super("How to Use");
         try {
             TWBlack = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("TitilliumWeb-Black.ttf"))).deriveFont(12f);
             TWBold = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("TitilliumWeb-Bold.ttf"))).deriveFont(12f);
@@ -56,17 +63,19 @@ public class HelpFrame extends JFrame{
         }
 
 
-        Container helpFrame = getContentPane();
-        setSize(500,575);
-        setLayout(null);
-        setLocationRelativeTo(null);
-        setResizable(false);
+        //Container helpFrame = getContentPane();
+        JFrame helpFrame = new JFrame("How to Use");
+        helpFrame.setSize(500,575);
+        helpFrame.setLayout(null);
+        helpFrame.setLocationRelativeTo(null);
+        helpFrame.setResizable(false);
         //setAlwaysOnTop(true);
-        setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setVisible(true);
+        helpFrame.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        helpFrame.setVisible(true);
         //popup.pack();
         JPanel help = new JPanel(), settings = new JPanel();
         help.setLayout(null);
+        //settings.setLayout(new BorderLayout());
         help.setSize(getWidth(),getHeight());
 
 
@@ -93,54 +102,63 @@ public class HelpFrame extends JFrame{
         help.add(helpBody1);
         //helpFrame.add(help);
 
-        fc = new JButton("Choose File");
-        fc.setSize(100,50);
-        fc.setLocation(15,15);
-        settings.add(fc);
-        l = new JLabel("no file selected");
-        l.setLocation(15,20);
-        settings.add(l);
 
+        JLabel themeHeading = new JLabel("**Changing theme doesn't change the colors of the Bingo board**",SwingConstants.CENTER);
+        themeHeading.setFont(TWLightItalic);
 
-
-
+//        themeHeading.setSize(250,50);
+//        themeHeading.setLocation(getWidth()/2-135,0);
+        settings.add(themeHeading);
+        Object[] data = {
+                "Flat Dark","Flat Darcula","Ark Dark","Ark Dark - Orange","Carbon","Carbon 2","Dark Flat","Dark Purple","Dracula","Gradiento Dark Fuchsia","Gradiento Deep Ocean","Gradiento Midnight Blue","Gradiento Nature Green","Gruvbox Dark Hard","Gruvbox Dark Medium","Gruvbox Dark Soft","Hiberbee Dark","High Contrast","Material Design Dark","Monocai","Nord","One Dark","Solarized Dark","Spacegray","Vuesion","Arc Dark","Ark Dark Contrast","Atom One Dark","Atom One Dark Contrast","Dracula","Dracula Contrast","Github Dark","Github Dark Contrast","Material Darker","Material Darker Contrast","Material Deep Ocean","Material Deep Ocean Contrast","Material Oceanic","Material Oceanic Contrast","Material Palenight","Material Palenight Contrast","Monokai Pro","Monokai Pro Contrast","Moonlight","Moonlight Contrast","Night Owl","Night Owl Contrast","Solarized Dark","Solarized Dark Contrast"
+        };
+        list = new JList<>(data); //data has type Object[]
+        list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        list.setLocation(getWidth()/2-135,30);
+        list.setLayoutOrientation(JList.VERTICAL_WRAP);
+        list.setVisibleRowCount(-1);
+        list.setSelectedIndex(20);
+        list.setSize(400,450);
+        JScrollPane listScroller = new JScrollPane(list);
+        listScroller.setPreferredSize(new Dimension(200, 450));
+        settings.add(list);
 
 
         JTabbedPane tp = new JTabbedPane();
         tp.setBounds(0,0,getWidth(),getHeight());
         tp.addTab("How to Play",help);
-        tp.addTab("Settings",settings);
+        tp.addTab("Theme",settings);
         helpFrame.add(tp);
         helpFrame.revalidate();
+        list.addListSelectionListener(listSelectionListener);
 
 
-        fc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // create an object of JFileChooser class
-                JFileChooser j = new JFileChooser(new File("BingoCards"));
-                j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                // invoke the showsSaveDialog function to show the save dialog
-                int r = j.showSaveDialog(null);
-
-                // if the user selects a file
-                if (r == JFileChooser.APPROVE_OPTION)
-
-                {
-                    // set the label to the path of the selected file
-                    folderDir = j.getSelectedFile().getAbsolutePath();
-                    System.out.println(folderDir);
-                    l.setText(folderDir+"\\BingoCards");
-                }
-                // if the user cancelled the operation
-                else
-                    l.setText("the user cancelled the operation");
-
-            }
-        });
     }
     public String getFolderDir(){
         return folderDir;
     }
+    ListSelectionListener listSelectionListener = new ListSelectionListener() {
+        public void valueChanged(ListSelectionEvent listSelectionEvent) {
+            System.out.print("First index: " + listSelectionEvent.getFirstIndex());
+            System.out.print(", Last index: " + listSelectionEvent.getLastIndex());
+            boolean adjust = listSelectionEvent.getValueIsAdjusting();
+            System.out.println(", Adjusting? " + adjust);
+            if (!adjust) {
+                JList list = (JList) listSelectionEvent.getSource();
+                int selections[] = list.getSelectedIndices();
+                Object selectionValues[] = list.getSelectedValues();
+                for (int i = 0, n = selections.length; i < n; i++) {
+                    if (i == 0) {
+                        System.out.print("  Selections: ");
+                    }
+                    System.out.print(selections[i] + "/" + selectionValues[i] + " ");
+                    HelpFrame.super.changeTheme(selections[i]);
+                }
+                System.out.println();
+            }
+        }
+
+    };
 }
+

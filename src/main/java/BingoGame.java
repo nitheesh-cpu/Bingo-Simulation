@@ -1,8 +1,13 @@
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.icons.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -14,6 +19,8 @@ public class BingoGame extends JFrame {
     private final JTextField inputField, inputFieldThree, inputFieldTwo;
     private Font TWExtraLightItalic;
     private Font TWLightItalic;
+    private JFrame helpFrame;
+    private JButton help;
     private HelpFrame hf;
     private Font TWRegular, DMRegular, TWItalic, TWLight;
 
@@ -127,14 +134,14 @@ public class BingoGame extends JFrame {
         buttonPanel2.add(button2);
 
 
-        JButton help = new JButton();
+        help = new JButton();
         help.setFocusable(false);
         help.setBorderPainted(false);
         help.setContentAreaFilled(false);
         help.setFocusPainted(false);
         help.setOpaque(false);
         help.setSize(24,24);
-        help.setLocation(8,230);
+        help.setLocation(550,8);
         help.setIcon(new FlatHelpButtonIcon());
         win.add(help);
 
@@ -182,7 +189,7 @@ public class BingoGame extends JFrame {
 
         progressBar = new JProgressBar(SwingConstants.HORIZONTAL);
         progressBar.setSize(300, 25);
-        progressBar.setLocation(90, 260);
+        progressBar.setLocation(150, 260);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
         progressBar.setIndeterminate(true);
@@ -194,6 +201,76 @@ public class BingoGame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
+
+
+        helpFrame = new JFrame("How to Use");
+        helpFrame.setSize(500,575);
+        helpFrame.setLayout(null);
+        helpFrame.setLocationRelativeTo(null);
+        helpFrame.setResizable(false);
+        //setAlwaysOnTop(true);
+        helpFrame.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        //helpFrame.setVisible(true);
+        //popup.pack();
+        JPanel helpF = new JPanel(), settings = new JPanel();
+        helpF.setLayout(null);
+        //settings.setLayout(new BorderLayout());
+        helpF.setSize(helpFrame.getWidth(),helpFrame.getHeight());
+
+
+
+        JLabel helpHeading = new JLabel("How to Use:",SwingConstants.CENTER);
+        helpHeading.setFont(TWRegular);
+        helpHeading.setSize(250,50);
+        helpHeading.setLocation(helpFrame.getWidth()/2-135,0);
+        helpF.add(helpHeading);
+        JTextArea helpBody1 = new JTextArea();
+        helpBody1.setFont(TWLight);
+        helpBody1.setEditable(false);
+        helpBody1.setLineWrap(true);
+        helpBody1.setWrapStyleWord(true);
+        helpBody1.setSize(400,400);
+        helpBody1.setLocation(25,75);
+        helpBody1.setText("""
+                How to use the Main Menu:
+                Enter a game code for your bingo game, this game code will allow you to run the program again with the same code and get the same bingo cards.Enter the number of bingo cards you want, the number of winners you want to play until, and the number of days you want to play the game over.Next, you can choose to either "Print Cards" which will save a pdf of all your bingo cards, or "Play Simulation" which will allow you to see how the game will play out and look at the game results.
+                *For printing Bingo cards you only need a game code and number of cards.
+
+                How to use the Bingo Simulation:
+                Use the spinner at the top by clicking the arrows on the side, or by manually entering a number, to change the card shown on the left side. From here you can click the button at the bottom right to draw a bingo ball and mark all the boards that have that number. The simulation will go on until set amount of winners have been reached and then you will be able to view the game results that have a table of the winning cards and drawn bingo balls, listed by the day and round they were pulled/won.""");
+        helpF.add(helpBody1);
+        //helpFrame.add(help);
+
+
+        JLabel themeHeading = new JLabel("**Changing theme doesn't change the colors of the Bingo board**",SwingConstants.CENTER);
+        themeHeading.setFont(TWLightItalic);
+
+//        themeHeading.setSize(250,50);
+//        themeHeading.setLocation(getWidth()/2-135,0);
+        settings.add(themeHeading);
+        Object[] data = {
+                "Flat Dark","Flat Darcula","Ark Dark","Ark Dark - Orange","Carbon","Carbon 2","Dark Flat","Dark Purple","Dracula","Gradiento Dark Fuchsia","Gradiento Deep Ocean","Gradiento Midnight Blue","Gradiento Nature Green","Gruvbox Dark Hard","Gruvbox Dark Medium","Gruvbox Dark Soft","Hiberbee Dark","High Contrast","Material Design Dark","Monocai","Nord","One Dark","Solarized Dark","Spacegray","Vuesion","Arc Dark","Ark Dark Contrast","Atom One Dark","Atom One Dark Contrast","Dracula","Dracula Contrast","Github Dark","Github Dark Contrast","Material Darker","Material Darker Contrast","Material Deep Ocean","Material Deep Ocean Contrast","Material Oceanic","Material Oceanic Contrast","Material Palenight","Material Palenight Contrast","Monokai Pro","Monokai Pro Contrast","Moonlight","Moonlight Contrast","Night Owl","Night Owl Contrast","Solarized Dark","Solarized Dark Contrast"
+        };
+        JList<Object> list = new JList<>(data); //data has type Object[]
+        list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        list.setLocation(helpFrame.getWidth()/2-135,30);
+        list.setLayoutOrientation(JList.VERTICAL_WRAP);
+        list.setVisibleRowCount(-1);
+        list.setSelectedIndex(20);
+        list.setSize(400,450);
+        JScrollPane listScroller = new JScrollPane(list);
+        listScroller.setPreferredSize(new Dimension(200, 450));
+        settings.add(list);
+
+
+        JTabbedPane tp = new JTabbedPane();
+        tp.setBounds(0,0,helpFrame.getWidth(),helpFrame.getHeight());
+        tp.addTab("How to Play",helpF);
+        tp.addTab("Theme",settings);
+        helpFrame.add(tp);
+        helpFrame.revalidate();
+        list.addListSelectionListener(listSelectionListener);
+
 
         button.addActionListener(e -> {
             button = (JButton) e.getSource();
@@ -236,7 +313,6 @@ public class BingoGame extends JFrame {
 
             }
 
-
             System.out.println("Frame Closed.");
         });
         button2.addActionListener(e -> {
@@ -277,19 +353,48 @@ public class BingoGame extends JFrame {
 
         help.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(hf == null) {
-                    hf = new HelpFrame();
-                    hf.setVisible(true);
-                }
-                else if(hf.isVisible())
-                    hf.setVisible(false);
-                else if(!hf.isVisible())
-                    hf.setVisible(true);
+//                if(hf == null) {
+//                    hf = new HelpFrame();
+//                    hf.setVisible(true);
+//                }
+                if(helpFrame.isVisible())
+                    helpFrame.setVisible(false);
+                else if(!helpFrame.isVisible())
+                    helpFrame.setVisible(true);
 
             }
         });
 
     }
+    public void changeTheme(int x){
+        switch(x){
+            case 0: FlatDarkLaf.setup();
+            SwingUtilities.updateComponentTreeUI(super.rootPane);
+            SwingUtilities.updateComponentTreeUI(helpFrame);
+            break;
+
+        }
+    }
+
+    ListSelectionListener listSelectionListener = new ListSelectionListener() {
+        public void valueChanged(ListSelectionEvent listSelectionEvent) {
+            boolean adjust = listSelectionEvent.getValueIsAdjusting();
+            System.out.println(", Adjusting? " + adjust);
+            if (!adjust) {
+                JList list = (JList) listSelectionEvent.getSource();
+                int selections[] = list.getSelectedIndices();
+                Object selectionValues[] = list.getSelectedValues();
+                for (int i = 0, n = selections.length; i < n; i++) {
+                    if (i == 0) {
+                        System.out.print("  Selections: ");
+                    }
+                    System.out.print(selections[i] + "/" + selectionValues[i] + " ");
+                    changeTheme(selections[i]);
+                }
+                System.out.println();
+            }
+        }
+    };
 
 
 }

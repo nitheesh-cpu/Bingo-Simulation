@@ -79,6 +79,7 @@ public class BingoBoard extends JPanel {
         bingoCardObjs = bc.getBingoCards();
         files = new ArrayList<String>();
         paint(getGraphics());
+        GameResults gameResults = new GameResults(bc,d,seed);
 
 
 
@@ -148,9 +149,6 @@ public class BingoBoard extends JPanel {
             }
             document.close();
         }
-
-        GameResults gameResults = new GameResults(bc,d,seed);
-
     }
 
     public void makePage(Graphics g2, BufferedImage image) {

@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Bingo-Maven:jar">
+  <artifact type="jar" build-on-make="true" name="Bingo-Maven:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Bingo_Maven_jar</output-path>
     <root id="archive" name="Bingo-Maven.jar">
       <element id="directory" name="META-INF">
