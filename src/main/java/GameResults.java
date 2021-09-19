@@ -2,6 +2,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -17,7 +20,22 @@ public class GameResults {
     private int[][] daysTable;
     private int amtBalls;
     private boolean done;
-    public GameResults(BingoCard bc,int days, int seed){
+    private static String winnersBanner =   "██╗    ██╗██╗███╗   ██╗███╗   ██╗███████╗██████╗ ███████╗   \n" +
+                                            "██║    ██║██║████╗  ██║████╗  ██║██╔════╝██╔══██╗██╔════╝██╗\n" +
+                                            "██║ █╗ ██║██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝███████╗╚═╝\n" +
+                                            "██║███╗██║██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║██╗\n" +
+                                            "╚███╔███╔╝██║██║ ╚████║██║ ╚████║███████╗██║  ██║███████║╚═╝\n" +
+                                            " ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝   \n" +
+                                            "                                                            ";
+    private static String ballsBanner =     "██████╗  █████╗ ██╗     ██╗     ███████╗    ██████╗ ██████╗  █████╗ ██╗    ██╗███╗   ██╗   \n" +
+                                            "██╔══██╗██╔══██╗██║     ██║     ██╔════╝    ██╔══██╗██╔══██╗██╔══██╗██║    ██║████╗  ██║██╗\n" +
+                                            "██████╔╝███████║██║     ██║     ███████╗    ██║  ██║██████╔╝███████║██║ █╗ ██║██╔██╗ ██║╚═╝\n" +
+                                            "██╔══██╗██╔══██║██║     ██║     ╚════██║    ██║  ██║██╔══██╗██╔══██║██║███╗██║██║╚██╗██║██╗\n" +
+                                            "██████╔╝██║  ██║███████╗███████╗███████║    ██████╔╝██║  ██║██║  ██║╚███╔███╔╝██║ ╚████║╚═╝\n" +
+                                            "╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═══╝   \n" +
+                                            "                                                                                           ";
+
+    public GameResults(BingoCard bc,int days, int seed) throws IOException {
         amount = bc.getAmtWinners();
         this.days = days;
         once = 0;
@@ -39,6 +57,18 @@ public class GameResults {
         getDays();
         for(int q = 0; q < cardsWon.size(); q++)
             getWin(cardsWon.get(q));
+
+        Path fileName = Path.of("BingoCards/results.txt");
+        StringBuilder content  = new StringBuilder();
+        content.append(winnersBanner+"\n");
+        content.append("Card #:\t\t\t\tDay:\t\t\t\t\tRound:\n");
+        for(int r = 0; r < winnersTable.length; r++)
+            content.append(winnersTable[r][0] +"\t\t\t\t"+winnersTable[r][1] +"\t\t\t\t"+winnersTable[r][2] +"\n");
+        content.append("\n"+ballsBanner+"\n");
+        content.append("Ball Drawn:\t\t\tDay:\t\t\t\t\tRound:\n");
+        for(int r = 0; r < ballsTable.length; r++)
+            content.append(ballsTable[r][0] +"\t\t\t\t"+ballsTable[r][1] +"  \t\t\t\t"+ballsTable[r][2] +"\n");
+        Files.writeString(fileName, content);
         System.out.println(Arrays.deepToString(winnersTable));
         System.out.println(Arrays.deepToString(ballsTable));
     }

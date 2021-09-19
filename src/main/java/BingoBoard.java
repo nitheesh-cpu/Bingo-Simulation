@@ -80,7 +80,7 @@ public class BingoBoard extends JPanel {
         files = new ArrayList<String>();
         paint(getGraphics());
 
-        GameResults gameResults = new GameResults(bc,d,seed);
+
 
         if(amount>=1000) {
             ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
@@ -149,11 +149,7 @@ public class BingoBoard extends JPanel {
             document.close();
         }
 
-
-
-
-
-
+        GameResults gameResults = new GameResults(bc,d,seed);
 
     }
 
