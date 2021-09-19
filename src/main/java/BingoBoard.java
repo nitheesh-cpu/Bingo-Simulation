@@ -49,7 +49,7 @@ public class BingoBoard extends JPanel {
     private JProgressBar progressBar;
     private static int max;
 
-    public BingoBoard(int s, int a, int w, int d) throws IOException {
+    public BingoBoard(int s, int a, int w, int d, String export) throws IOException {
 //        progressBar = jp;
         seed = s;
         amount = a;
@@ -71,7 +71,7 @@ public class BingoBoard extends JPanel {
             System.out.println("Error");
         }
         try {
-            bc = new BingoCard(seed, a,w);
+            bc = new BingoCard(seed, a, w);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.printf("error");
@@ -79,76 +79,77 @@ public class BingoBoard extends JPanel {
         bingoCardObjs = bc.getBingoCards();
         files = new ArrayList<String>();
         paint(getGraphics());
-        GameResults gameResults = new GameResults(bc,d,seed);
+        GameResults gameResults = new GameResults(bc, d, seed);
+        System.out.println(export);
+        if (export.equals("pdf")) {
+            if (amount >= 1000) {
+                ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
+                executor.submit(() -> {
 
-
-
-        if(amount>=1000) {
-            ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
-            executor.submit(() -> {
-
-                String outputFile = "BingoCards/output"+((amount/1000)+1)+".pdf";
-                File dest = new File(outputFile);
-                try {
-                    dest.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                PdfWriter writer = null;
-                try {
-                    writer = new PdfWriter(dest);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                pdfDoc.addNewPage();
-                Document document = new Document(pdfDoc);
-                for (String f : files.subList(((amount/4)-((amount/4)%250)), files.size())) {
-                    ImageData data = null;
+                    String outputFile = "BingoCards/output" + ((amount / 1000) + 1) + ".pdf";
+                    File dest = new File(outputFile);
                     try {
-                        data = ImageDataFactory.create(f);
-                    } catch (MalformedURLException e) {
+                        dest.createNewFile();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Image img = new Image(data);
-                    document.add(img);
+                    PdfWriter writer = null;
+                    try {
+                        writer = new PdfWriter(dest);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    PdfDocument pdfDoc = new PdfDocument(writer);
+                    pdfDoc.addNewPage();
+                    Document document = new Document(pdfDoc);
+                    for (String f : files.subList(((amount / 4) - ((amount / 4) % 250)), files.size())) {
+                        ImageData data = null;
+                        try {
+                            data = ImageDataFactory.create(f);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                        Image img = new Image(data);
+                        document.add(img);
+                    }
+                    document.close();
+                });
+                int cards = files.size();
+                System.out.print(cards);
+                for (int i = 1, j = 1; i < cards - (cards % 250); i += 250, j++) {
+                    String outputFile = "BingoCards/output" + j + ".pdf";
+                    File dest = new File(outputFile);
+                    dest.createNewFile();
+                    PdfWriter writer = new PdfWriter(dest);
+                    PdfDocument pdfDoc = new PdfDocument(writer);
+                    pdfDoc.addNewPage();
+                    Document document = new Document(pdfDoc);
+                    for (String f : files.subList(i - 1, i + 249)) {
+                        ImageData data = ImageDataFactory.create(f);
+                        Image img = new Image(data);
+                        document.add(img);
+                    }
+                    document.close();
                 }
-                document.close();
-            });
-            int cards = files.size();
-            System.out.print(cards);
-            for (int i = 1, j = 1; i < cards - (cards % 250); i += 250, j++) {
-                String outputFile = "BingoCards/output" + j + ".pdf";
+
+            } else {
+                String outputFile = "BingoCards/output.pdf";
                 File dest = new File(outputFile);
                 dest.createNewFile();
                 PdfWriter writer = new PdfWriter(dest);
                 PdfDocument pdfDoc = new PdfDocument(writer);
                 pdfDoc.addNewPage();
                 Document document = new Document(pdfDoc);
-                for (String f : files.subList(i - 1, i + 249)) {
+                for (String f : files) {
                     ImageData data = ImageDataFactory.create(f);
                     Image img = new Image(data);
                     document.add(img);
                 }
                 document.close();
             }
+            FileUtils.deleteDirectory(new File("BingoCards/cards"));
+        }
 
-        }
-        else {
-            String outputFile = "BingoCards/output.pdf";
-            File dest = new File(outputFile);
-            dest.createNewFile();
-            PdfWriter writer = new PdfWriter(dest);
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.addNewPage();
-            Document document = new Document(pdfDoc);
-            for (String f : files) {
-                ImageData data = ImageDataFactory.create(f);
-                Image img = new Image(data);
-                document.add(img);
-            }
-            document.close();
-        }
     }
 
     public void makePage(Graphics g2, BufferedImage image) {
@@ -322,44 +323,46 @@ public class BingoBoard extends JPanel {
 
     }
 
-    private void PDF(){
-        int complete = amount/4;
+    private void PDF() {
+        int complete = amount / 4;
         new File("BingoCards").mkdirs();
-        try{
-            int pos=0;
-            for(int i=0; i<complete; i++){
+        try {
+            int pos = 0;
+            for (int i = 0; i < complete; i++) {
                 BufferedImage image = new BufferedImage(2048, 1536, BufferedImage.TYPE_INT_ARGB);
                 Graphics g = image.getGraphics();
-                for(int r=0; r<= 700&&pos<bingoCardObjs.length; r+=700){
-                    for(int c=0; c<=700; c+=700 ) {
+                for (int r = 0; r <= 700 && pos < bingoCardObjs.length; r += 700) {
+                    for (int c = 0; c <= 700; c += 700) {
                         g.drawImage(cards.get(pos).getImage(), c, r, null);
                         pos++;
                     }
                 }
-                ImageIO.write(image, "png", new File("BingoCards/"+(i+1)+ ".png"));
+                ImageIO.write(image, "png", new File("BingoCards/" + (i + 1) + ".png"));
             }
-            if(complete*4!=amount){
+            if (complete * 4 != amount) {
                 BufferedImage image = new BufferedImage(2550, 3300, BufferedImage.TYPE_INT_ARGB);
                 Graphics g = image.getGraphics();
                 for (int r = 0; r <= 700; r += 700) {
-                    for (int c = 0; c <= 700&&pos<cards.size(); c += 700) {
+                    for (int c = 0; c <= 700 && pos < cards.size(); c += 700) {
                         g.drawImage(cards.get(pos).getImage(), c, r, null);
                         pos++;
                     }
                 }
                 ImageIO.write(image, "png", new File("BingoCards/" + (complete + 1) + ".png"));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(Exception e){e.printStackTrace();}
     }
-    private BufferedImage createOutline(){
+
+    private BufferedImage createOutline() {
         try {
             BufferedImage image = new BufferedImage(600, 700, BufferedImage.TYPE_INT_ARGB);
             Graphics g = image.getGraphics();
             int i = 0;
 
             g.setColor(new Color(255, 216, 102));
-            g.fillRect(100,0,500,150);
+            g.fillRect(100, 0, 500, 150);
             g.setColor(new Color(229, 233, 240));
             g.setFont(JBExtraBold);
             g.drawString("B", 120, 95);
@@ -370,15 +373,14 @@ public class BingoBoard extends JPanel {
             g.setFont(GSBold);
             g.setColor(new Color(229, 233, 240));
             g.drawString("#" + (count + 1), 600, 620);
-            for(int r=0; r<500; r+=100){
-                for(int c=100; c<=500; c+=100){
-                    if(i==0){
+            for (int r = 0; r < 500; r += 100) {
+                for (int c = 100; c <= 500; c += 100) {
+                    if (i == 0) {
                         g.setColor(new Color(76, 86, 106));
                         g.fillRect(r, c, 100, 100);
                         //System.out.println("x: " + r + " y: " + c);
                         i++;
-                    }
-                    else if(i==1){
+                    } else if (i == 1) {
                         g.setColor(new Color(67, 76, 94));
                         g.fillRect(r, c, 100, 100);
                         i--;
@@ -389,10 +391,12 @@ public class BingoBoard extends JPanel {
 
 //            ImageIO.write(image, "png", new File("BingoBoard.png"));
 //            System.out.println("Done");
+        } catch (Exception e) {
+            return null;
         }
-        catch(Exception e){return null;}
     }
-    private void createCard(){
+
+    private void createCard() {
         try {
             BufferedImage image = createOutline();
             Graphics g = image.getGraphics();
@@ -414,8 +418,9 @@ public class BingoBoard extends JPanel {
             System.out.println(count + " Done");
             count++;
             cardImage = image;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(Exception e){e.printStackTrace();}
 
     }
 
