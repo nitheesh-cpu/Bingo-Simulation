@@ -17,8 +17,8 @@ public class BingoSimFrame extends JFrame {
     private BingoCardObj[] bingoCards;
     private int[][] board;
     private JPanel panel;
-    private Random rn;
     private JTextArea textArea2;
+    private Random rn;
     private boolean done;
     private int amtBalls    ;
     private int[][] daysTable;

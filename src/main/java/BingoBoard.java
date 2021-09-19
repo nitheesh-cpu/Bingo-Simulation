@@ -48,14 +48,8 @@ public class BingoBoard extends JPanel {
     private String cardsDir;
     private JProgressBar progressBar;
     private static int max;
-    ;
 
-    public BingoBoard(int s, int a, String dir) throws IOException {
-        cardsDir = dir;
-        new BingoBoard(s,a);
-    }
-
-    public BingoBoard(int s, int a) throws IOException {
+    public BingoBoard(int s, int a, int w, int d) throws IOException {
 //        progressBar = jp;
         seed = s;
         amount = a;
@@ -77,7 +71,7 @@ public class BingoBoard extends JPanel {
             System.out.println("Error");
         }
         try {
-            bc = new BingoCard(seed, a);
+            bc = new BingoCard(seed, a,w);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.printf("error");
@@ -85,6 +79,8 @@ public class BingoBoard extends JPanel {
         bingoCardObjs = bc.getBingoCards();
         files = new ArrayList<String>();
         paint(getGraphics());
+
+        GameResults gameResults = new GameResults(bc,d,seed);
 
         if(amount>=1000) {
             ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();

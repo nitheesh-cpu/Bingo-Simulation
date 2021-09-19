@@ -198,6 +198,8 @@ public class BingoGame extends JFrame {
         button.addActionListener(e -> {
             button = (JButton) e.getSource();
             String seed = inputField.getText();
+            int winners = Integer.parseInt(inputFieldThree.getText());
+            int days =  Integer.parseInt(inputFieldTwo.getText());
             int amount = (int) jSpinner.getValue();
             if (amount != 0) {
                 setSize(500, 350);
@@ -208,6 +210,10 @@ public class BingoGame extends JFrame {
                 try {
                     if (amount == 0) {
                         throw new NumberFormatException();
+                    }if (winners == 0) {
+                        throw new NumberFormatException();
+                    }if (days == 0) {
+                        throw new NumberFormatException();
                     }
                     ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
                     executor.submit(() -> {
@@ -215,7 +221,7 @@ public class BingoGame extends JFrame {
                             button.setEnabled(false);
                             button2.setEnabled(false);
                             help.setEnabled(false);
-                            new BingoBoard(Integer.parseInt(seed), (Math.round(amount / 4) * 4) + 4);
+                            new BingoBoard(Integer.parseInt(seed), (Math.round(amount / 4) * 4) + 4,winners,days);
                             dispose();
                         } catch (IOException ex) {
                             ex.printStackTrace();
