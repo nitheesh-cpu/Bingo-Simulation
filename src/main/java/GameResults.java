@@ -63,7 +63,7 @@ public class GameResults {
         content.append(winnersBanner+"\n");
         content.append("Card #:\t\t\t\tDay:\t\t\t\t\tRound:\n");
         for(int r = 0; r < winnersTable.length; r++)
-            content.append(winnersTable[r][0] +"\t\t\t\t"+winnersTable[r][1] +"\t\t\t\t"+winnersTable[r][2] +"\n");
+            content.append(winnersTable[r][0] +"\t\t\t\t"+winnersTable[r][1] +"  \t\t\t\t"+winnersTable[r][2] +"\n");
         content.append("\n"+ballsBanner+"\n");
         content.append("Ball Drawn:\t\t\tDay:\t\t\t\t\tRound:\n");
         for(int r = 0; r < ballsTable.length; r++)

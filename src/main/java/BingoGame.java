@@ -254,7 +254,10 @@ public class BingoGame extends JFrame {
         helpBody1.setLocation(25,75);
         helpBody1.setText("""
                 How to use the Main Menu:
-                Enter a game code for your bingo game, this game code will allow you to run the program again with the same code and get the same bingo cards.Enter the number of bingo cards you want, the number of winners you want to play until, and the number of days you want to play the game over.Next, you can choose to either "Print Cards" which will save a pdf of all your bingo cards, or "Play Simulation" which will allow you to see how the game will play out and look at the game results.
+                Enter a game code for your bingo game, this game code will allow you to run the program again with the same code and get the same bingo cards. Enter the number of bingo cards you want, the number of winners you want to play until, and the number of days you want to play the game over.Next, you can choose to either "Print Cards" which will save a pdf of all your bingo cards, or "Play Simulation" which will allow you to see how the game will play out and look at the game results.
+                
+                How to use Print Cards:
+                Fill in all the fields and press which export option you would like in the bottom left and press 'Print Cards' to save the set amount of cards to your computer.
                 
                 How to use the Bingo Simulation:
                 Use the spinner at the top by clicking the arrows on the side, or by manually entering a number, to change the card shown on the left side. From here you can click the button at the bottom right to draw a bingo ball and mark all the boards that have that number. The simulation will go on until set amount of winners have been reached and then you will be able to view the game results that have a table of the winning cards and drawn bingo balls, listed by the day and round they were pulled/won.""");
