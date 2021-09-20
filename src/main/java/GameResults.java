@@ -69,8 +69,8 @@ public class GameResults {
         for(int r = 0; r < ballsTable.length; r++)
             content.append(ballsTable[r][0] +"\t\t\t\t"+ballsTable[r][1] +"  \t\t\t\t"+ballsTable[r][2] +"\n");
         Files.writeString(fileName, content);
-        System.out.println(Arrays.deepToString(winnersTable));
-        System.out.println(Arrays.deepToString(ballsTable));
+//        System.out.println(Arrays.deepToString(winnersTable));
+//        System.out.println(Arrays.deepToString(ballsTable));
     }
     public void drawBall() {
         if (done) return;
