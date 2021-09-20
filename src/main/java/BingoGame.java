@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -23,14 +24,15 @@ import java.util.concurrent.ExecutorService;
 public class BingoGame extends JFrame {
     private JButton button, button2;
     private final JProgressBar progressBar;
-    private final JTextField inputField, inputFieldThree, inputFieldTwo;
+    private final JTextField inputField, inputFieldThree;
+    private final JSpinner inputFieldTwo;
     private Font TWExtraLightItalic;
     private Font TWLightItalic;
     private JFrame helpFrame;
     private JRadioButton png, pdf;
     private ButtonGroup buttonGroup;
     private JButton help;
-    private HelpFrame hf;
+//    private HelpFrame hf;
     private Font TWRegular, DMRegular, TWItalic, TWLight;
 
     public BingoGame() {
@@ -200,7 +202,8 @@ public class BingoGame extends JFrame {
         inputFieldThree.setLocation((((getWidth()-400)/5)*3)+(100*2)-10, 150);
         win.add(inputFieldThree);
 
-        inputFieldTwo = new JTextField("", 10);
+        SpinnerModel daysModel = new SpinnerNumberModel(5, 1, 5, 1);
+        inputFieldTwo = new JSpinner(daysModel);
         inputFieldTwo.setSize(100, 30);
         inputFieldTwo.setLocation((((getWidth()-400)/5)*4)+(100*3)-10, 150);
         win.add(inputFieldTwo);
@@ -300,21 +303,21 @@ public class BingoGame extends JFrame {
             String seed = inputField.getText();
             String winners = inputFieldThree.getText();
             int amount = (int) jSpinner.getValue();
-            int days =  Integer.parseInt(inputFieldTwo.getText());
-            if (amount != 0) {
-                setSize(500, 350);
-                progressBar.setVisible(true);
-                revalidate();
-            }
+            int days =  (int) inputFieldTwo.getValue();
             while(true) {
                 try {
                     if (amount == 0) {
                         throw new NumberFormatException();
-                    }if (Integer.parseInt(winners) == 0) {
+                    }if (winners.isBlank()) {
                         throw new NumberFormatException();
+                    }if(Integer.parseInt(winners) > amount){
+                        throw new WinnersGreaterThanAmount();
                     }if (days == 0) {
                         throw new NumberFormatException();
                     }
+                    setSize(500, 350);
+                    progressBar.setVisible(true);
+                    revalidate();
                     ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
                     executor.submit(() -> {
                         try {
@@ -327,10 +330,13 @@ public class BingoGame extends JFrame {
                             ex.printStackTrace();
                         }
                     });
-                } catch (NumberFormatException ex) {
+                }catch (NumberFormatException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "You are missing an argument! \nPlease go back and enter a number!", "Missing Arguments!", JOptionPane.ERROR_MESSAGE);
                     throw ex;
+                }catch (WinnersGreaterThanAmount ex){
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "Why are there more winning cards than cards created?", "Something seems wrong...", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
 
@@ -343,13 +349,15 @@ public class BingoGame extends JFrame {
             String seed = inputField.getText();
             String winners = inputFieldThree.getText();
             int amount = (int) jSpinner.getValue();
-            int days =  Integer.parseInt(inputFieldTwo.getText());
+
+            int days =  (int) inputFieldTwo.getValue();
             while (true) {
                 try {
                     if (seed.isBlank()) {
                         throw new NumberFormatException();
                     }
                     if (winners.isBlank()) throw new NumberFormatException();
+                    if(Integer.parseInt(winners) > amount) throw new WinnersGreaterThanAmount();
                     if (amount == 0) throw new NumberFormatException();
                     if (days == 0) throw new NumberFormatException();
 
@@ -357,6 +365,9 @@ public class BingoGame extends JFrame {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "You are missing an argument! \nPlease go back and enter a number!", "Missing Arguments!", JOptionPane.ERROR_MESSAGE);
                     throw ex;
+                } catch (WinnersGreaterThanAmount ex){
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "Why are there more winning cards than cards created?", "Something seems wrong...", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             }
@@ -617,4 +628,9 @@ public class BingoGame extends JFrame {
     };
 
 
+}
+class WinnersGreaterThanAmount extends Exception {
+    public WinnersGreaterThanAmount() {
+        super("HOW ARE THERE MORE WINNING CARDS THAN CARDS CREATED HUHHHH????");
+    }
 }
