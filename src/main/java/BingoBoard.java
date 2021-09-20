@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class BingoBoard extends JPanel {
     private JProgressBar progressBar;
     private static int max;
 
-    public BingoBoard(int s, int a, int w, int d, String export) throws IOException {
+    public BingoBoard(int s, int a, int w, int d, String export) throws IOException{
 //        progressBar = jp;
         seed = s;
         amount = a;
@@ -149,7 +150,7 @@ public class BingoBoard extends JPanel {
             }
             FileUtils.deleteDirectory(new File("BingoCards/cards"));
         }
-
+        Desktop.getDesktop().open(new File("BingoCards"));
     }
 
     public void makePage(Graphics g2, BufferedImage image) {
