@@ -3,7 +3,8 @@ import java.awt.image.BufferedImage;
 public class BingoCardObj2 {
     private BufferedImage board;
     private boolean won;
-    private int roundWon, id;
+    private int roundWon;
+    private final int id;
 
     public BingoCardObj2(int x, BufferedImage b) {
         id = x;
@@ -16,6 +17,7 @@ public class BingoCardObj2 {
         won = b;
         roundWon = x;
     }
+
     public boolean didWin() {
         return won;
     }
@@ -25,9 +27,10 @@ public class BingoCardObj2 {
         return board;
     }
 
-    public int getRoundWon(){
+    public int getRoundWon() {
         return roundWon;
     }
+
     public void setBoard(BufferedImage x) {
         board = x;
     }

@@ -1,7 +1,8 @@
 public class BingoCardObj {
     private int[][] board;
     private boolean won;
-    private int roundWon, id;
+    private int roundWon;
+    private final int id;
 
     public BingoCardObj(int x, int[][] b) {
         id = x;
@@ -12,6 +13,7 @@ public class BingoCardObj {
         won = b;
         roundWon = x;
     }
+
     public boolean didWin() {
         return won;
     }
@@ -21,9 +23,10 @@ public class BingoCardObj {
         return board;
     }
 
-    public int getRoundWon(){
+    public int getRoundWon() {
         return roundWon;
     }
+
     public void setBoard(int[][] x) {
         board = x;
     }

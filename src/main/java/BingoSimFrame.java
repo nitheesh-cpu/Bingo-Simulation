@@ -1,41 +1,43 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Random;
 
 public class BingoSimFrame extends JFrame {
     private Font TWBlack, TWBold, GSBold, DMRegular, DMItalic, JBExtraBold, TWBoldItalic, TWExtraLight, TWExtraLightItalic, TWItalic, TWLight, TWLightItalic, TWRegular, TWSemiBold, TWSemiBoldItalic;
-    private BingoCardObj[] bingoCards;
+    private final BingoCardObj[] bingoCards;
     private int[][] board;
-    private JPanel panel;
-    private JTextArea textArea2;
-    private Random rn;
+    private final JPanel panel;
+    private final JTextArea textArea2;
+    private final Random rn;
     private boolean done;
-    private int amtBalls    ;
+    private int amtBalls;
     private int[][] daysTable;
     private Graphics cardGraphics;
-    private ArrayList<Integer> drawnNumbers;
-    private ArrayList<Integer> cardsWon;
+    private final ArrayList<Integer> drawnNumbers;
+    private final ArrayList<Integer> cardsWon;
     private int count;
     private JScrollPane scrollPane, scrollPane2;
     private JTable table, table2;
     private String[] columnNames, columnNames2;
-    private int seed, once, maxWinners;
-    private int days;
+    private final int seed;
+    private int once;
+    private final int maxWinners;
+    private final int days;
     private Object[][] data, data2;
-    private DefaultTableModel defaultTableModel2, defaultTableModel;
+    private final DefaultTableModel defaultTableModel2;
+    private final DefaultTableModel defaultTableModel;
 
 
-    public BingoSimFrame(BingoCard bc,int days,int seed) {
+    public BingoSimFrame(BingoCard bc, int days, int seed) {
         super("Bingo Simulation");
         JFrame.setDefaultLookAndFeelDecorated(true);
 //        getDays();
@@ -157,10 +159,10 @@ public class BingoSimFrame extends JFrame {
 
             public void markNumbers(Graphics g) {
                 int[][] card = bingoCards[count].getBoard();
-                if(bingoCards[count].didWin()){
+                if (bingoCards[count].didWin()) {
                     ArrayList<Integer> drawn = new ArrayList<>();
-                    for(int i = 1; i <= bingoCards[count].getRoundWon(); i++){
-                        drawn.add(drawnNumbers.get(i-1));
+                    for (int i = 1; i <= bingoCards[count].getRoundWon(); i++) {
+                        drawn.add(drawnNumbers.get(i - 1));
                     }
                     for (int r = 1; r <= 5; r++) {
                         for (int c = 0; c < 5; c++) {
@@ -170,8 +172,7 @@ public class BingoSimFrame extends JFrame {
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     for (int r = 1; r <= 5; r++) {
                         for (int c = 0; c < 5; c++) {
                             if (drawnNumbers.contains(card[r - 1][c])) {
@@ -298,11 +299,10 @@ public class BingoSimFrame extends JFrame {
         results.setSize(130, 30);
 
 
-
         JFrame popup = new JFrame("Game Results");
         //popup.pack();
         popup.setLayout(new BorderLayout());
-        popup.setSize(500,575);
+        popup.setSize(500, 575);
         popup.setLocationRelativeTo(null);
         popup.setResizable(false);
         popup.setAlwaysOnTop(true);
@@ -310,40 +310,40 @@ public class BingoSimFrame extends JFrame {
         JPanel info = new JPanel(), table = new JPanel();
         JLabel heading = new JLabel("Balls Drawn:");
         heading.setSize(200, 65);
-        heading.setLocation((popup.getWidth()/2)-100, 10);
+        heading.setLocation((popup.getWidth() / 2) - 100, 10);
         heading.setFont(TWRegular);
         info.add(heading);
         JLabel heading2 = new JLabel("Winning Cards:");
         heading2.setSize(200, 65);
-        heading2.setLocation((popup.getWidth()/2)-100, 10);
+        heading2.setLocation((popup.getWidth() / 2) - 100, 10);
         heading2.setFont(TWRegular);
         table.add(heading2);
 
-        JTable jt=new JTable(new DefaultTableModel());
+        JTable jt = new JTable(new DefaultTableModel());
         defaultTableModel = (DefaultTableModel) jt.getModel();
         defaultTableModel.addColumn("Card #");
         defaultTableModel.addColumn("Day");
         defaultTableModel.addColumn("Round");
         jt.setCellSelectionEnabled(false);
-        jt.setBounds(30,40,500,100);
+        jt.setBounds(30, 40, 500, 100);
         jt.setEnabled(false);
-        JScrollPane sp=new JScrollPane(jt);
+        JScrollPane sp = new JScrollPane(jt);
         table.add(sp);
 
-        JTable jt2=new JTable(new DefaultTableModel());
+        JTable jt2 = new JTable(new DefaultTableModel());
         defaultTableModel2 = (DefaultTableModel) jt2.getModel();
         defaultTableModel2.addColumn("Ball");
         defaultTableModel2.addColumn("Day");
         defaultTableModel2.addColumn("Round");
         jt2.setCellSelectionEnabled(false);
-        jt2.setBounds(30,40,500,100);
+        jt2.setBounds(30, 40, 500, 100);
         jt2.setEnabled(false);
-        JScrollPane sp2=new JScrollPane(jt2);
+        JScrollPane sp2 = new JScrollPane(jt2);
         info.add(sp2, BorderLayout.CENTER);
 
-        JTabbedPane tp=new JTabbedPane();
-        tp.add("Winners",table);
-        tp.add("Balls",info);
+        JTabbedPane tp = new JTabbedPane();
+        tp.add("Winners", table);
+        tp.add("Balls", info);
         popup.add(tp);
 
 
@@ -365,7 +365,7 @@ public class BingoSimFrame extends JFrame {
                 boolean valid = false;
                 int tmp = 0;
                 while (!valid) {
-                    tmp = (int) rn.nextInt(75) + 1;
+                    tmp = rn.nextInt(75) + 1;
                     if (!drawnNumbers.contains(tmp)) {
                         valid = true;
                     }
@@ -376,12 +376,12 @@ public class BingoSimFrame extends JFrame {
                 if (cardsWon.size() < maxWinners) {
                     checkWin();
                 }
-                if(cardsWon.size() >= maxWinners){
+                if (cardsWon.size() >= maxWinners) {
                     if (once == 0) {
                         textArea2.append("\nGame Over!");
                         amtBalls = drawnNumbers.size();
                         getDays();
-                        for(int q = 0; q < cardsWon.size(); q++)
+                        for (int q = 0; q < cardsWon.size(); q++)
                             getWin(cardsWon.get(q));
                         comps.remove(draw);
                         label4.setText("Get Game Results:");
@@ -403,8 +403,8 @@ public class BingoSimFrame extends JFrame {
 
         results.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(!popup.isVisible())
-                popup.setVisible(true);
+                if (!popup.isVisible())
+                    popup.setVisible(true);
             }
         });
 
@@ -417,19 +417,19 @@ public class BingoSimFrame extends JFrame {
 
     }
 
-    public void getDays(){
+    public void getDays() {
         System.out.println(amtBalls);
         daysTable = new int[2][days];
-        for(int i = 0; i < daysTable[0].length; i++){
-            for(int j = 0; j < 2; j++){
-                daysTable[j][i] = amtBalls/(days*2);
+        for (int i = 0; i < daysTable[0].length; i++) {
+            for (int j = 0; j < 2; j++) {
+                daysTable[j][i] = amtBalls / (days * 2);
             }
         }
-        int excess = amtBalls%(days*2);
+        int excess = amtBalls % (days * 2);
         outerloop:
-        for(int i = 0; i < daysTable[0].length; i++){
-            for(int j = 0; j < 2; j++){
-                if(excess == 0) break outerloop;
+        for (int i = 0; i < daysTable[0].length; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (excess == 0) break outerloop;
                 daysTable[j][i]++;
                 excess--;
             }
@@ -437,29 +437,29 @@ public class BingoSimFrame extends JFrame {
         System.out.println(Arrays.deepToString(daysTable));
         Object[][] daysArr = new Object[2][days];
         int count = 0;
-        String days[] = {"Monday","Tuesday","Wednesday","Thursday","Friday"};
-        String round[] = {"AM","PM"};
-        for(int i = 0; i < daysTable[0].length; i++){
-            for(int j = 0; j < 2; j++){
-                for(int l = 0; l < daysTable[j][i]; l++){
-                    defaultTableModel2.addRow(new Object[]{drawnNumbers.get(count),days[i],round[j]});
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+        String[] round = {"AM", "PM"};
+        for (int i = 0; i < daysTable[0].length; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int l = 0; l < daysTable[j][i]; l++) {
+                    defaultTableModel2.addRow(new Object[]{drawnNumbers.get(count), days[i], round[j]});
                     count++;
                 }
             }
         }
     }
 
-    public void getWin(int q){
-        String days[] = {"Monday","Tuesday","Wednesday","Thursday","Friday"};
-        String rou[] = {"AM","PM"};
+    public void getWin(int q) {
+        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+        String[] rou = {"AM", "PM"};
         int round = bingoCards[q].getRoundWon();
         System.out.println(round);
         outer:
-        for(int i = 0; i < daysTable[0].length; i++){
-            for(int j = 0; j < 2; j++){
-                round-=daysTable[j][i];
-                if(round <= 0){
-                    defaultTableModel.addRow(new Object[]{q+1,days[i],rou[j]});
+        for (int i = 0; i < daysTable[0].length; i++) {
+            for (int j = 0; j < 2; j++) {
+                round -= daysTable[j][i];
+                if (round <= 0) {
+                    defaultTableModel.addRow(new Object[]{q + 1, days[i], rou[j]});
                     break outer;
                 }
             }

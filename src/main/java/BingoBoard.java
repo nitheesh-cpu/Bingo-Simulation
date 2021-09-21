@@ -1,33 +1,23 @@
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.imageio.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
-import java.awt.image.*;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.io.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import javax.swing.*;
 
 
 public class BingoBoard extends JPanel {
@@ -40,17 +30,18 @@ public class BingoBoard extends JPanel {
     private BufferedImage cardImage;
     private JPanel p;
     private JFrame f;
-    private BingoCardObj[] bingoCardObjs;
+    private final BingoCardObj[] bingoCardObjs;
     private ArrayList<BingoCardObj2> cards;
     ArrayList<String> files;
-    private int seed, amount;
+    private final int seed;
+    private final int amount;
     private String formattedDate, dir;
     private Dimension size;
     private String cardsDir;
     private JProgressBar progressBar;
     private static int max;
 
-    public BingoBoard(int s, int a, int w, int d, String export) throws IOException{
+    public BingoBoard(int s, int a, int w, int d, String export) throws IOException {
 //        progressBar = jp;
         seed = s;
         amount = a;
@@ -319,9 +310,6 @@ public class BingoBoard extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //System.out.println("Done");
-
-
     }
 
     private void PDF() {
@@ -389,9 +377,6 @@ public class BingoBoard extends JPanel {
                 }
             }
             return image;
-
-//            ImageIO.write(image, "png", new File("BingoBoard.png"));
-//            System.out.println("Done");
         } catch (Exception e) {
             return null;
         }
@@ -414,8 +399,6 @@ public class BingoBoard extends JPanel {
             g.setColor(new Color(229, 233, 240));
             g.setFont(DMItalic);
             g.drawString("FREE", 325, 360);
-//            new File("C:\\Users\\Cyric\\Downloads\\BingoProjectTest\\BingoCards1").mkdirs();
-//            ImageIO.write(image, "png", new File("C:\\Users\\Cyric\\Downloads\\BingoProjectTest\\BingoCards1/"+i+ ".png"));
             System.out.println(count + " Done");
             count++;
             cardImage = image;
@@ -424,85 +407,6 @@ public class BingoBoard extends JPanel {
         }
 
     }
-
-
-//    public void export() {
-//
-//        //joins 4 per page
-//        final int PAGECT = (cards.size() + 3)/4;
-//        BufferedImage pages[] = new BufferedImage[PAGECT];
-//        int pageno = 0;
-//
-//        for(int i = 4; i < bingoCardObjs.length ; i += 4)
-//        {
-//            Raster i1 = cards.get(i - 4).getCard(i - 4).getData(),
-//                    i2 = cards.get(i - 3).getCard(i - 3).getData(),
-//                    i3 = cards.get(i - 2).getCard(i - 2).getData(),
-//                    i4 = cards.get(i - 1).getCard(i - 1).getData();
-//
-//            BufferedImage page = new BufferedImage(
-//                    PAGEWID,
-//                    PAGEHIH,
-//                    BufferedImage.TYPE_INT_ARGB);
-//            WritableRaster wr = page.getRaster();
-//
-//            wr.setRect(0, 0, i1);
-//            wr.setRect(PAGEWID / 2, 0, i2);
-//            wr.setRect(0, PAGEHIH / 2, i3);
-//            wr.setRect(PAGEWID / 2, PAGEHIH / 2, i4);
-//
-//            pages[pageno] = page;
-//
-//            pageno++;
-//        }
-//
-//        //last page if pagect not divisible by 4
-//        if(PAGECT * 4 != bingoCardObjs.length)
-//        {
-//            BufferedImage page = new BufferedImage(
-//                    PAGEWID,
-//                    PAGEHIH,
-//                    BufferedImage.TYPE_INT_ARGB);
-//            WritableRaster wr = page.getRaster();
-//
-//            int lastCard = bingoCardObjs.length - 1;
-//            switch(bingoCardObjs.length % 4)
-//            {
-//                case 3:
-//                    Raster i3 = cards.get(lastCard).getCard(lastCard).getData();
-//                    wr.setRect(0, PAGEHIH / 2, i3);
-//                    lastCard--;
-//                case 2:
-//                    Raster i2 = cards.get(lastCard).getCard(lastCard).getData();
-//                    wr.setRect(PAGEWID / 2, 0, i2);
-//                    lastCard--;
-//                case 1:
-//                    Raster i1 = cards.get(lastCard).getCard(lastCard).getData();
-//                    wr.setRect(0, 0, i1);
-//            }
-//
-//            pages[pageno] = page;
-//        }
-//
-//        //print
-//        PrinterJob job = PrinterJob.getPrinterJob();
-//        job.setPrintable(new Printable(){
-//            public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException
-//            {
-//                if(pageIndex >= PAGECT)
-//                    return NO_SUCH_PAGE;
-//                graphics.drawImage(pages[pageIndex], (int)pageFormat.getImageableX(), (int)pageFormat.getImageableY(),
-//                        (int)pageFormat.getImageableWidth(), (int)pageFormat.getImageableHeight(), null);
-//                return PAGE_EXISTS;
-//            }
-//        });
-//        if(job.printDialog())
-//            try {
-//                job.print();
-//            } catch (PrinterException e) {
-//                e.printStackTrace();
-//            }
-//    }
 
     public void paint(Graphics g) {
         BufferedImage image = new BufferedImage(1100, 1325, BufferedImage.TYPE_INT_ARGB);
@@ -520,11 +424,6 @@ public class BingoBoard extends JPanel {
             makePage(g2, image);
             System.out.println(i);
         }
-
-//        for (int i = 0; i < amount; i += 4) {
-//            BingoCardObj2 bingoCardObj2 = new BingoCardObj2(count,)
-//            System.out.println(i);
-//        }
 
     }
 }

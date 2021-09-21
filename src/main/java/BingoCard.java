@@ -4,12 +4,12 @@ import java.util.Random;
 
 public class BingoCard {
 
-    private Random rn;
+    private final Random rn;
     public static final int LENGTH = 6;
     private int[][] card;
     private int count;
     private int winners;
-    private BingoCardObj[] bingoCards;
+    private final BingoCardObj[] bingoCards;
 
     public BingoCard(int s, int a) throws IOException {
         bingoCards = new BingoCardObj[a];
@@ -56,7 +56,7 @@ public class BingoCard {
         for (int i = 0; i <= 4; i++) {
             for (int row = 0; row < card.length; row++) {
                 while (!valid) {
-                    tmp = (int) rn.nextInt(15) + 1 + 15 * i;
+                    tmp = rn.nextInt(15) + 1 + 15 * i;
                     if (!alreadyUsed.contains(tmp)) {
                         valid = true;
                         alreadyUsed.add(tmp);
