@@ -353,47 +353,47 @@ public class BingoSimFrame extends JFrame {
         setResizable(false);
         setVisible(true);
 
-        draw.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (done) return;
-                if (drawnNumbers.size() == 75) {
-                    done = true;
-                    textArea.append("\nAll out of numbers!");
-                    return;
-                }
-                int num;
-                boolean valid = false;
-                int tmp = 0;
-                while (!valid) {
-                    tmp = rn.nextInt(75) + 1;
-                    if (!drawnNumbers.contains(tmp)) {
-                        valid = true;
+            draw.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (done) return;
+                    if (drawnNumbers.size() == 75) {
+                        done = true;
+                        textArea.append("\nAll out of numbers!");
+                        return;
                     }
-                }
-                if (drawnNumbers.contains(tmp))
-                    System.out.println("how");
-                drawnNumbers.add(tmp);
-                if (cardsWon.size() < maxWinners) {
-                    checkWin();
-                }
-                if (cardsWon.size() >= maxWinners) {
-                    if (once == 0) {
-                        textArea2.append("\nGame Over!");
-                        amtBalls = drawnNumbers.size();
-                        getDays();
-                        for (int q = 0; q < cardsWon.size(); q++)
-                            getWin(cardsWon.get(q));
-                        comps.remove(draw);
-                        label4.setText("Get Game Results:");
-                        comps.add(results);
+                    int num;
+                    boolean valid = false;
+                    int tmp = 0;
+                    while (!valid) {
+                        tmp = rn.nextInt(75) + 1;
+                        if (!drawnNumbers.contains(tmp)) {
+                            valid = true;
+                        }
                     }
-                    once++;
+                    if (drawnNumbers.contains(tmp))
+                        System.out.println("how");
+                    drawnNumbers.add(tmp);
+                    if (cardsWon.size() < maxWinners) {
+                        checkWin();
+                    }
+                    if (cardsWon.size() >= maxWinners) {
+                        if (once == 0) {
+                            textArea2.append("\nGame Over!");
+                            amtBalls = drawnNumbers.size();
+                            getDays();
+                            for (int q = 0; q < cardsWon.size(); q++)
+                                getWin(cardsWon.get(q));
+                            comps.remove(draw);
+                            label4.setText("Get Game Results:");
+                            comps.add(results);
+                        }
+                        once++;
+                    }
+                    //System.out.println(tmp);
+                    textArea.append(tmp + "   ");
+                    panel.repaint();
                 }
-                //System.out.println(tmp);
-                textArea.append(tmp + "   ");
-                panel.repaint();
-            }
-        });
+            });
         spinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 count = Integer.parseInt("" + ((JSpinner) e.getSource()).getValue()) - 1;

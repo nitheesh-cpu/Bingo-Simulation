@@ -17,29 +17,22 @@ import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 
 public class BingoBoard extends JPanel {
-    public static final int PAGEWID = 1100;
-    public static final int PAGEHIH = 1325;
-    public static final String IMGTYPE = "png";
     private Font TWBlack, TWBold, GSBold, DMRegular, DMItalic, JBExtraBold, TWBoldItalic, TWExtraLight, TWExtraLightItalic, TWItalic, TWLight, TWLightItalic, TWRegular, TWSemiBold, TWSemiBoldItalic;
     private BingoCard bc;
     private int count;
-    private BufferedImage cardImage;
-    private JPanel p;
-    private JFrame f;
     private final BingoCardObj[] bingoCardObjs;
     private ArrayList<BingoCardObj2> cards;
     ArrayList<String> files;
     private final int seed;
     private final int amount;
     private String formattedDate, dir;
-    private Dimension size;
     private String cardsDir;
     private JProgressBar progressBar;
-    private static int max;
 
     public BingoBoard(int s, int a, int w, int d, String export) throws IOException {
 //        progressBar = jp;
@@ -48,10 +41,10 @@ public class BingoBoard extends JPanel {
         count = 0;
         try {
 
-            JBExtraBold = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("JetBrainsMono-ExtraBold.ttf")).deriveFont(120f);
-            DMItalic = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("DankMono-Italic.ttf")).deriveFont(40f);
-            DMRegular = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("DankMono-Regular.ttf")).deriveFont(80f);
-            GSBold = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("Gill Sans Bold.otf")).deriveFont(12f);
+            JBExtraBold = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("JetBrainsMono-ExtraBold.ttf"))).deriveFont(120f);
+            DMItalic = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("DankMono-Italic.ttf"))).deriveFont(40f);
+            DMRegular = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("DankMono-Regular.ttf"))).deriveFont(80f);
+            GSBold = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("Gill Sans Bold.otf"))).deriveFont(12f);
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
@@ -66,7 +59,7 @@ public class BingoBoard extends JPanel {
             bc = new BingoCard(seed, a, w);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.printf("error");
+            System.out.println("error");
         }
         bingoCardObjs = bc.getBingoCards();
         files = new ArrayList<String>();
@@ -179,12 +172,10 @@ public class BingoBoard extends JPanel {
         g2.setFont(DMItalic);
         g2.drawString("FREE", 205, 365);
         board = bingoCardObjs[count].getBoard();
-        for (int i = 0; i < 5; i++) {
-            for (int x = 1; x < 6; x++) {
+        for (int i = 0; i < 5; i++)
+            for (int x = 1; x < 6; x++)
                 if (!(i == 2 && x == 3))
                     g2.drawString(String.valueOf(board[x - 1][i]), ((i) * 100) + 5, (x * 100) + 78);
-            }
-        }
         count++;
 
         g2.setColor(new Color(59, 66, 82));
@@ -217,12 +208,10 @@ public class BingoBoard extends JPanel {
         g2.setFont(DMItalic);
         g2.drawString("FREE", 805, 365);
         board = bingoCardObjs[count].getBoard();
-        for (int i = 0; i < 5; i++) {
-            for (int x = 1; x < 6; x++) {
+        for (int i = 0; i < 5; i++)
+            for (int x = 1; x < 6; x++)
                 if (!(i == 2 && x == 3))
                     g2.drawString(String.valueOf(board[x - 1][i]), ((i) * 100) + 605, (x * 100) + 78);
-            }
-        }
         count++;
 
 
@@ -401,7 +390,6 @@ public class BingoBoard extends JPanel {
             g.drawString("FREE", 325, 360);
             System.out.println(count + " Done");
             count++;
-            cardImage = image;
         } catch (Exception e) {
             e.printStackTrace();
         }

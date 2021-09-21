@@ -140,7 +140,7 @@ public class GameResults {
         int round = bingoCards[q].getRoundWon();
         System.out.println(round);
         outer:
-        for (int i = 0; i < daysTable[0].length; i++) {
+        for (int i = 0; i < daysTable[0].length; i++)
             for (int j = 0; j < 2; j++) {
                 round -= daysTable[j][i];
                 if (round <= 0) {
@@ -148,7 +148,6 @@ public class GameResults {
                     break outer;
                 }
             }
-        }
     }
 
     public void checkWin() {

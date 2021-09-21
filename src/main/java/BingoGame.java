@@ -309,7 +309,7 @@ public class BingoGame extends JFrame {
                         throw new NumberFormatException();
                     }
                     if (Integer.parseInt(winners) > amount) {
-                        throw new WinnersGreaterThanAmount();
+                        throw new NumberFormatException();
                     }
                     if (days == 0) {
                         throw new NumberFormatException();
@@ -333,9 +333,6 @@ public class BingoGame extends JFrame {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "You are missing an argument! \nPlease go back and enter a number!", "Missing Arguments!", JOptionPane.ERROR_MESSAGE);
                     throw ex;
-                } catch (WinnersGreaterThanAmount ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "Why are there more winning cards than cards created?", "Something seems wrong...", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
 
@@ -356,7 +353,7 @@ public class BingoGame extends JFrame {
                         throw new NumberFormatException();
                     }
                     if (winners.isBlank()) throw new NumberFormatException();
-                    if (Integer.parseInt(winners) > amount) throw new WinnersGreaterThanAmount();
+                    if (Integer.parseInt(winners) > amount) throw new NumberFormatException();
                     if (amount == 0) throw new NumberFormatException();
                     if (days == 0) throw new NumberFormatException();
 
@@ -364,9 +361,6 @@ public class BingoGame extends JFrame {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "You are missing an argument! \nPlease go back and enter a number!", "Missing Arguments!", JOptionPane.ERROR_MESSAGE);
                     throw ex;
-                } catch (WinnersGreaterThanAmount ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(BingoGame.super.getContentPane(), "Why are there more winning cards than cards created?", "Something seems wrong...", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             }
@@ -661,9 +655,6 @@ public class BingoGame extends JFrame {
                 int[] selections = list.getSelectedIndices();
                 Object[] selectionValues = list.getSelectedValues();
                 for (int i = 0, n = selections.length; i < n; i++) {
-                    if (i == 0) {
-                        System.out.print("  Selections: ");
-                    }
                     System.out.print(selections[i] + "/" + selectionValues[i] + " ");
                     changeTheme(selections[i]);
                 }
@@ -671,12 +662,4 @@ public class BingoGame extends JFrame {
             }
         }
     };
-
-
-}
-
-class WinnersGreaterThanAmount extends Exception {
-    public WinnersGreaterThanAmount() {
-        super("HOW ARE THERE MORE WINNING CARDS THAN CARDS CREATED HUHHHH????");
-    }
 }
