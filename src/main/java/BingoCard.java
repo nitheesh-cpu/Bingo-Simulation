@@ -40,6 +40,10 @@ public class BingoCard {
         return winners;
     }
 
+    public int getAmtCards(){
+        return bingoCards.length;
+    }
+
     public int getPos(int x, int y) {
         if (x >= card.length || y >= card.length) return -1;
         return card[x][y];

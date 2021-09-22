@@ -33,6 +33,13 @@ public class GameResults {
                                                 "██████╔╝██║  ██║███████╗███████╗███████║    ██████╔╝██║  ██║██║  ██║╚███╔███╔╝██║ ╚████║╚═╝\n" +
                                                 "╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═══╝   \n" +
                                                 "                                                                                           ";
+    private static final String gameInfo =  " ██████╗  █████╗ ███╗   ███╗███████╗    ██╗███╗   ██╗███████╗ ██████╗    \n" +
+                                            "██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██║████╗  ██║██╔════╝██╔═══██╗██╗\n" +
+                                            "██║  ███╗███████║██╔████╔██║█████╗      ██║██╔██╗ ██║█████╗  ██║   ██║╚═╝\n" +
+                                            "██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ██║██║╚██╗██║██╔══╝  ██║   ██║██╗\n" +
+                                            "╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ██║██║ ╚████║██║     ╚██████╔╝╚═╝\n" +
+                                            " ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝    ╚═╝╚═╝  ╚═══╝╚═╝      ╚═════╝    \n" +
+                                            "                                                                         ";
 
     public GameResults(BingoCard bc, int days, int seed) throws IOException {
         amount = bc.getAmtWinners();
@@ -59,6 +66,8 @@ public class GameResults {
 
         Path fileName = Path.of("BingoCards/results.txt");
         StringBuilder content = new StringBuilder();
+        content.append(gameInfo);
+        content.append("\nGame Seed: " + seed + "\nAmount of Cards: " + bc.getAmtCards() + "\nAmount of Winners: " + bc.getAmtWinners() + "\nNumber of Days: " + days + "\n\n");
         content.append(winnersBanner + "\n");
         content.append("Card #:\t\t\t\tDay:\t\t\t\t\tRound:\n");
         for (int r = 0; r < winnersTable.length; r++)
