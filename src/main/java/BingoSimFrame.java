@@ -22,6 +22,7 @@ public class BingoSimFrame extends JFrame {
     private int amtBalls;
     private int[][] daysTable;
     private Graphics cardGraphics;
+    private JFrame helpFrame;
     private final ArrayList<Integer> drawnNumbers;
     private final ArrayList<Integer> cardsWon;
     private int count;
@@ -209,12 +210,25 @@ public class BingoSimFrame extends JFrame {
         JPanel comps = new JPanel();
         GridLayout layout = new GridLayout(0, 2);
         setLayout(layout);
-        GridLayout components = new GridLayout(8, 0);
+        GridLayout components = new GridLayout(9, 0);
         comps.setLayout(components);
         components.setVgap(15);
         comps.setSize(500, 625);
         comps.setBorder(BorderFactory.createEmptyBorder(0, 30, 30, 30));
         add(comps);
+
+        JPanel topPanel = new JPanel();
+        GridLayout topPane = new GridLayout(0,2);
+        topPane.setVgap(15);
+        topPanel.setLayout(topPane);
+
+        JButton back = new JButton("<-- Go Back");
+        topPanel.add(back);
+        back.setFocusable(false);
+        JButton help = new JButton("Help");
+        topPanel.add(help);
+        help.setFocusable(false);
+        comps.add(topPanel);
 
         JLabel label = new JLabel();
         label.setSize(300, 15);
@@ -266,21 +280,6 @@ public class BingoSimFrame extends JFrame {
         scroll2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         textArea2.setSize(new Dimension(500, 300));
         comps.add(scroll2);
-
-//        columnNames = new String[]{"Roll #", "Ball"};
-//        data = new Object[75][2];
-//        table = new JTable(data,columnNames);
-//        scrollPane = new JScrollPane(table);
-//        table.setFillsViewportHeight(true);
-//        table.setCellSelectionEnabled(false);
-//        comps.add(scrollPane, BorderLayout.CENTER);
-//
-//        columnNames2 = new String[]{"Roll #", "Card ID"};
-//        data2 = new Object[maxWinners][2];
-//        table2 = new JTable(data2,columnNames2);
-//        scrollPane2 = new JScrollPane(table2);
-//        table2.setFillsViewportHeight(true);
-//        comps.add(scrollPane2, BorderLayout.CENTER);
 
         JLabel label4 = new JLabel();
         label4.setSize(300, 100);
@@ -346,12 +345,49 @@ public class BingoSimFrame extends JFrame {
         tp.add("Balls", info);
         popup.add(tp);
 
+        helpFrame = new JFrame("How to Use");
+        helpFrame.setSize(500, 575);
+        helpFrame.setLayout(null);
+        helpFrame.setLocationRelativeTo(null);
+        helpFrame.setResizable(false);
+        //setAlwaysOnTop(true);
+        helpFrame.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        JLabel helpHeading = new JLabel("How to Use:", SwingConstants.CENTER);
+        helpHeading.setFont(TWRegular);
+        helpHeading.setSize(250, 50);
+        helpHeading.setLocation(helpFrame.getWidth() / 2 - 135, 0);
+        helpFrame.add(helpHeading);
+        JTextArea helpBody1 = new JTextArea();
+        helpBody1.setFont(TWLight);
+        helpBody1.setEditable(false);
+        helpBody1.setLineWrap(true);
+        helpBody1.setWrapStyleWord(true);
+        helpBody1.setSize(400, 400);
+        helpBody1.setLocation(25, 75);
+        helpBody1.setText("""
+                How to use the Main Menu:
+                Enter a game code for your bingo game, this game code will allow you to run the program again with the same code and get the same bingo cards. Enter the number of bingo cards you want, the number of winners you want to play until, and the number of days you want to play the game over.Next, you can choose to either "Print Cards" which will save a pdf of all your bingo cards, or "Play Simulation" which will allow you to see how the game will play out and look at the game results.
+                                
+                How to use Print Cards:
+                Fill in all the fields and press which export option you would like in the bottom left and press 'Print Cards' to save the set amount of cards to your computer. The folder containing all of the Bingo cards should open upon finishing.
+                                
+                How to use the Bingo Simulation:
+                Use the spinner at the top by clicking the arrows on the side, or by manually entering a number, to change the card shown on the left side. From here you can click the button at the bottom right to draw a bingo ball and mark all the boards that have that number. The simulation will go on until set amount of winners have been reached and then you will be able to view the game results that have a table of the winning cards and drawn bingo balls, listed by the day and round they were pulled/won.""");
+        helpFrame.add(helpBody1);
 
 //        popup.add(info);
 //        popup.add(table);
 
         setResizable(false);
         setVisible(true);
+
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BingoGame.back();
+                BingoSimFrame.super.setVisible(false);
+            }
+        });
 
             draw.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -412,6 +448,15 @@ public class BingoSimFrame extends JFrame {
             public void stateChanged(ChangeEvent e) {
                 count = Integer.parseInt("" + ((JSpinner) e.getSource()).getValue()) - 1;
                 panel.repaint();
+            }
+        });
+        help.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (helpFrame.isVisible())
+                    helpFrame.setVisible(false);
+                else if (!helpFrame.isVisible())
+                    helpFrame.setVisible(true);
+
             }
         });
 
